@@ -111,6 +111,9 @@ Create a website with the following blocks in this exact JSON structure:
   "theme": {
     "primaryColor": "#3B82F6",
     "secondaryColor": "#1E40AF",
+    "accentColor": "#60A5FA",
+    "backgroundColor": "#FFFFFF",
+    "textColor": "#1F2937",
     "fontFamily": "Inter, sans-serif"
   }
 }

@@ -1,5 +1,7 @@
 import { Block } from './blocks';
 
+export type Viewport = 'desktop' | 'tablet' | 'mobile';
+
 export interface Site {
   id: string;
   user_id: string;
@@ -9,11 +11,15 @@ export interface Site {
   theme: {
     primaryColor: string;
     secondaryColor: string;
+    accentColor: string;
+    backgroundColor: string;
+    textColor: string;
     fontFamily: string;
   };
   created_at: string;
   updated_at: string;
   published: boolean;
+  published_url?: string;
 }
 
 export interface CreateSiteInput {

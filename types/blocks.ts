@@ -1,4 +1,4 @@
-export type BlockType = 'hero' | 'features' | 'contact' | 'testimonials' | 'footer';
+export type BlockType = 'hero' | 'features' | 'contact' | 'testimonials' | 'footer' | 'navbar' | 'stats' | 'cta' | 'pricing' | 'gallery';
 
 export interface BaseBlock {
   id: string;
@@ -73,4 +73,88 @@ export interface FooterBlock extends BaseBlock {
   };
 }
 
-export type Block = HeroBlock | FeaturesBlock | ContactBlock | TestimonialsBlock | FooterBlock;
+export interface NavLink {
+  label: string;
+  href: string;
+}
+
+export interface NavbarBlock extends BaseBlock {
+  type: 'navbar';
+  data: {
+    logo: string;
+    links: NavLink[];
+    ctaText?: string;
+    ctaLink?: string;
+  };
+}
+
+export interface Stat {
+  value: string;
+  label: string;
+  icon?: string;
+}
+
+export interface StatsBlock extends BaseBlock {
+  type: 'stats';
+  data: {
+    title: string;
+    subtitle: string;
+    stats: Stat[];
+  };
+}
+
+export interface CTABlock extends BaseBlock {
+  type: 'cta';
+  data: {
+    title: string;
+    subtitle: string;
+    primaryCTA: string;
+    primaryLink: string;
+    secondaryCTA?: string;
+    secondaryLink?: string;
+  };
+}
+
+export interface PricingTier {
+  name: string;
+  price: string;
+  period: string;
+  features: string[];
+  highlighted?: boolean;
+}
+
+export interface PricingBlock extends BaseBlock {
+  type: 'pricing';
+  data: {
+    title: string;
+    subtitle: string;
+    tiers: PricingTier[];
+  };
+}
+
+export interface GalleryImage {
+  url: string;
+  alt: string;
+  caption?: string;
+}
+
+export interface GalleryBlock extends BaseBlock {
+  type: 'gallery';
+  data: {
+    title: string;
+    subtitle: string;
+    images: GalleryImage[];
+  };
+}
+
+export type Block =
+  | HeroBlock
+  | FeaturesBlock
+  | ContactBlock
+  | TestimonialsBlock
+  | FooterBlock
+  | NavbarBlock
+  | StatsBlock
+  | CTABlock
+  | PricingBlock
+  | GalleryBlock;
