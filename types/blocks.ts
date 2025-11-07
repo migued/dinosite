@@ -1,4 +1,4 @@
-export type BlockType = 'hero' | 'features' | 'contact' | 'testimonials' | 'footer' | 'navbar' | 'stats' | 'cta' | 'pricing' | 'gallery';
+export type BlockType = 'hero' | 'features' | 'contact' | 'testimonials' | 'footer' | 'navbar' | 'stats' | 'cta' | 'pricing' | 'gallery' | 'team' | 'faq' | 'video' | 'newsletter' | 'logoGrid';
 
 export interface BaseBlock {
   id: string;
@@ -147,6 +147,76 @@ export interface GalleryBlock extends BaseBlock {
   };
 }
 
+export interface TeamMember {
+  name: string;
+  role: string;
+  bio: string;
+  image?: string;
+  social?: {
+    linkedin?: string;
+    twitter?: string;
+    email?: string;
+  };
+}
+
+export interface TeamBlock extends BaseBlock {
+  type: 'team';
+  data: {
+    title: string;
+    subtitle: string;
+    members: TeamMember[];
+  };
+}
+
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+export interface FAQBlock extends BaseBlock {
+  type: 'faq';
+  data: {
+    title: string;
+    subtitle: string;
+    items: FAQItem[];
+  };
+}
+
+export interface VideoBlock extends BaseBlock {
+  type: 'video';
+  data: {
+    title: string;
+    subtitle: string;
+    videoUrl: string; // YouTube or Vimeo URL
+    thumbnail?: string;
+  };
+}
+
+export interface NewsletterBlock extends BaseBlock {
+  type: 'newsletter';
+  data: {
+    title: string;
+    subtitle: string;
+    placeholder: string;
+    buttonText: string;
+  };
+}
+
+export interface Logo {
+  name: string;
+  image: string;
+  url?: string;
+}
+
+export interface LogoGridBlock extends BaseBlock {
+  type: 'logoGrid';
+  data: {
+    title: string;
+    subtitle: string;
+    logos: Logo[];
+  };
+}
+
 export type Block =
   | HeroBlock
   | FeaturesBlock
@@ -157,4 +227,9 @@ export type Block =
   | StatsBlock
   | CTABlock
   | PricingBlock
-  | GalleryBlock;
+  | GalleryBlock
+  | TeamBlock
+  | FAQBlock
+  | VideoBlock
+  | NewsletterBlock
+  | LogoGridBlock;

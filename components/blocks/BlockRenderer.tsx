@@ -11,6 +11,11 @@ import Stats from './Stats';
 import CTA from './CTA';
 import Pricing from './Pricing';
 import Gallery from './Gallery';
+import Team from './Team';
+import FAQ from './FAQ';
+import Video from './Video';
+import Newsletter from './Newsletter';
+import LogoGrid from './LogoGrid';
 import { FaGripVertical } from 'react-icons/fa';
 
 interface BlockRendererProps {
@@ -59,6 +64,16 @@ function SortableBlock({ block, isEditing, isDraggable, onUpdate }: SortableBloc
         return <Pricing block={block} isEditing={isEditing} onUpdate={onUpdate} />;
       case 'gallery':
         return <Gallery block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+      case 'team':
+        return <Team block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+      case 'faq':
+        return <FAQ block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+      case 'video':
+        return <Video block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+      case 'newsletter':
+        return <Newsletter block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+      case 'logoGrid':
+        return <LogoGrid block={block} isEditing={isEditing} onUpdate={onUpdate} />;
       case 'testimonials':
         return <Testimonials block={block} isEditing={isEditing} onUpdate={onUpdate} />;
       case 'contact':
