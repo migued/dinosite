@@ -2,11 +2,13 @@
 
 import { useEditorStore } from '@/lib/store/editorStore';
 import { useState } from 'react';
-import { FaCube, FaPalette, FaTrash } from 'react-icons/fa';
+import { FaCube, FaPalette, FaPlus, FaTrash } from 'react-icons/fa';
+import { BlockType } from '@/types/blocks';
+import { blockTemplates, blockDescriptions } from '@/lib/blockTemplates';
 
 export default function EditorSidebar() {
-  const { site, selectedBlockId, setSelectedBlock, updateTheme, removeBlock } = useEditorStore();
-  const [activeTab, setActiveTab] = useState<'blocks' | 'theme'>('blocks');
+  const { site, selectedBlockId, setSelectedBlock, updateTheme, removeBlock, addBlock } = useEditorStore();
+  const [activeTab, setActiveTab] = useState<'blocks' | 'add' | 'theme'>('blocks');
 
   if (!site) return null;
 
@@ -28,36 +30,76 @@ export default function EditorSidebar() {
     footer: '📍',
   };
 
+  const handleAddBlock = (blockType: BlockType) => {
+    const newBlock = {
+      id: crypto.randomUUID(),
+      type: blockType,
+      order: site.blocks.length,
+      data: blockTemplates[blockType],
+    };
+    addBlock(newBlock as any);
+  };
+
+  const availableBlocks: BlockType[] = [
+    'navbar',
+    'hero',
+    'features',
+    'stats',
+    'cta',
+    'pricing',
+    'gallery',
+    'team',
+    'faq',
+    'video',
+    'newsletter',
+    'logoGrid',
+    'testimonials',
+    'contact',
+    'footer',
+  ];
+
   return (
     <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
       {/* Tabs */}
       <div className="flex border-b border-gray-200">
         <button
           onClick={() => setActiveTab('blocks')}
-          className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+          className={`flex-1 px-3 py-3 text-xs font-medium transition-colors ${
             activeTab === 'blocks'
               ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
               : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
           }`}
         >
-          <FaCube className="inline mr-2" />
+          <FaCube className="inline mr-1" />
           Blocks
         </button>
         <button
+          onClick={() => setActiveTab('add')}
+          className={`flex-1 px-3 py-3 text-xs font-medium transition-colors ${
+            activeTab === 'add'
+              ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
+              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+          }`}
+        >
+          <FaPlus className="inline mr-1" />
+          Add
+        </button>
+        <button
           onClick={() => setActiveTab('theme')}
-          className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+          className={`flex-1 px-3 py-3 text-xs font-medium transition-colors ${
             activeTab === 'theme'
               ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
               : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
           }`}
         >
-          <FaPalette className="inline mr-2" />
+          <FaPalette className="inline mr-1" />
           Theme
         </button>
       </div>
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4">
+        {/* Current Blocks Tab */}
         {activeTab === 'blocks' && (
           <div>
             <div className="mb-4">
@@ -108,14 +150,46 @@ export default function EditorSidebar() {
                   </div>
                 ))}
             </div>
-
-            {/* Add Block Button (for future) */}
-            <button className="w-full mt-4 px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-blue-500 hover:text-blue-600 transition-colors text-sm">
-              + Add Block (Coming Soon)
-            </button>
           </div>
         )}
 
+        {/* Add Blocks Tab */}
+        {activeTab === 'add' && (
+          <div>
+            <div className="mb-4">
+              <h2 className="text-sm font-semibold text-gray-700 mb-2">
+                Add New Block
+              </h2>
+              <p className="text-xs text-gray-500">
+                Click to add to your page
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              {availableBlocks.map((blockType) => (
+                <button
+                  key={blockType}
+                  onClick={() => handleAddBlock(blockType)}
+                  className="w-full p-3 bg-gray-50 hover:bg-blue-50 border-2 border-transparent hover:border-blue-500 rounded-lg transition-all text-left group"
+                >
+                  <div className="flex items-start space-x-3">
+                    <span className="text-2xl">{blockIcons[blockType]}</span>
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-900 capitalize text-sm group-hover:text-blue-600">
+                        {blockType}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        {blockDescriptions[blockType]}
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Theme Tab */}
         {activeTab === 'theme' && (
           <div>
             <div className="mb-6">
