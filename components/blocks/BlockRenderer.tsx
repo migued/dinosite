@@ -16,6 +16,9 @@ import FAQ from './FAQ';
 import Video from './Video';
 import Newsletter from './Newsletter';
 import LogoGrid from './LogoGrid';
+import BlogList from './BlogList';
+import BlogPost from './BlogPost';
+import BlogCategories from './BlogCategories';
 import { FaGripVertical } from 'react-icons/fa';
 
 interface BlockRendererProps {
@@ -80,6 +83,12 @@ function SortableBlock({ block, isEditing, isDraggable, onUpdate }: SortableBloc
         return <ContactForm block={block} isEditing={isEditing} onUpdate={onUpdate} />;
       case 'footer':
         return <Footer block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+      case 'blogList':
+        return <BlogList block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+      case 'blogPost':
+        return <BlogPost block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+      case 'blogCategories':
+        return <BlogCategories block={block} isEditing={isEditing} onUpdate={onUpdate} />;
       default:
         return null;
     }

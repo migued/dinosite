@@ -157,8 +157,20 @@ const renderBlock = (block: Block): string => {
   }
 };
 
+// Helper to get blocks for export (multi-page or legacy)
+const getBlocksForExport = (site: Site): Block[] => {
+  // Multi-page site - export home page
+  if (site.pages && site.pages.length > 0) {
+    const homePage = site.pages.find(p => p.isHome) || site.pages[0];
+    return homePage.blocks;
+  }
+  // Legacy single-page site
+  return site.blocks || [];
+};
+
 export const exportToHTML = (site: Site): string => {
-  const blocksHtml = site.blocks
+  const blocks = getBlocksForExport(site);
+  const blocksHtml = blocks
     .sort((a, b) => a.order - b.order)
     .map(renderBlock)
     .join('\n');

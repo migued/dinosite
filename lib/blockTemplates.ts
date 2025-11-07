@@ -218,6 +218,22 @@ export const blockTemplates: Record<BlockType, any> = {
     ],
     copyright: '© 2024 Your Company. All rights reserved.',
   },
+
+  blogList: {
+    title: 'Latest from Our Blog',
+    subtitle: 'Insights, tutorials, and updates from our team',
+    postsToShow: 6,
+    layout: 'grid',
+  },
+
+  blogPost: {
+    postId: undefined,
+  },
+
+  blogCategories: {
+    title: 'Explore by Category',
+    displayStyle: 'grid',
+  },
 };
 
 export const blockDescriptions: Record<BlockType, string> = {
@@ -236,4 +252,7 @@ export const blockDescriptions: Record<BlockType, string> = {
   testimonials: 'Customer reviews and quotes',
   contact: 'Contact form and information',
   footer: 'Footer with links and social media',
+  blogList: 'Display recent blog posts in grid or list',
+  blogPost: 'Full blog post with content and metadata',
+  blogCategories: 'Browse blog posts by category',
 };

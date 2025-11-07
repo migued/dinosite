@@ -21,7 +21,8 @@ import {
 } from '@dnd-kit/sortable';
 
 export default function Editor() {
-  const { site, isEditing, updateBlock, viewport, reorderBlocks } = useEditorStore();
+  const { site, isEditing, updateBlock, viewport, reorderBlocks, getCurrentBlocks } = useEditorStore();
+  const currentBlocks = getCurrentBlocks();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -33,8 +34,8 @@ export default function Editor() {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (over && active.id !== over.id && site) {
-      const sortedBlocks = site.blocks.sort((a, b) => a.order - b.order);
+    if (over && active.id !== over.id) {
+      const sortedBlocks = currentBlocks.sort((a, b) => a.order - b.order);
       const oldIndex = sortedBlocks.findIndex((block) => block.id === active.id);
       const newIndex = sortedBlocks.findIndex((block) => block.id === over.id);
 
@@ -77,12 +78,12 @@ export default function Editor() {
               onDragEnd={handleDragEnd}
             >
               <SortableContext
-                items={site.blocks.map((b) => b.id)}
+                items={currentBlocks.map((b) => b.id)}
                 strategy={verticalListSortingStrategy}
               >
                 <div className={`bg-white ${isEditing ? 'ring-2 ring-blue-500' : ''}`}>
                   <BlockRenderer
-                    blocks={site.blocks}
+                    blocks={currentBlocks}
                     isEditing={isEditing}
                     onUpdateBlock={updateBlock}
                     isDraggable={isEditing}

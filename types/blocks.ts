@@ -1,4 +1,4 @@
-export type BlockType = 'hero' | 'features' | 'contact' | 'testimonials' | 'footer' | 'navbar' | 'stats' | 'cta' | 'pricing' | 'gallery' | 'team' | 'faq' | 'video' | 'newsletter' | 'logoGrid';
+export type BlockType = 'hero' | 'features' | 'contact' | 'testimonials' | 'footer' | 'navbar' | 'stats' | 'cta' | 'pricing' | 'gallery' | 'team' | 'faq' | 'video' | 'newsletter' | 'logoGrid' | 'blogList' | 'blogPost' | 'blogCategories';
 
 export interface BaseBlock {
   id: string;
@@ -217,6 +217,31 @@ export interface LogoGridBlock extends BaseBlock {
   };
 }
 
+export interface BlogListBlock extends BaseBlock {
+  type: 'blogList';
+  data: {
+    title: string;
+    subtitle: string;
+    postsToShow: number;
+    layout: 'grid' | 'list';
+  };
+}
+
+export interface BlogPostBlock extends BaseBlock {
+  type: 'blogPost';
+  data: {
+    postId?: string; // References a BlogPost in the site
+  };
+}
+
+export interface BlogCategoriesBlock extends BaseBlock {
+  type: 'blogCategories';
+  data: {
+    title: string;
+    displayStyle: 'grid' | 'pills' | 'sidebar';
+  };
+}
+
 export type Block =
   | HeroBlock
   | FeaturesBlock
@@ -232,4 +257,7 @@ export type Block =
   | FAQBlock
   | VideoBlock
   | NewsletterBlock
-  | LogoGridBlock;
+  | LogoGridBlock
+  | BlogListBlock
+  | BlogPostBlock
+  | BlogCategoriesBlock;

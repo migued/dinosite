@@ -7,8 +7,9 @@ import { BlockType } from '@/types/blocks';
 import { blockTemplates, blockDescriptions } from '@/lib/blockTemplates';
 
 export default function EditorSidebar() {
-  const { site, selectedBlockId, setSelectedBlock, updateTheme, removeBlock, addBlock } = useEditorStore();
+  const { site, selectedBlockId, setSelectedBlock, updateTheme, removeBlock, addBlock, getCurrentBlocks } = useEditorStore();
   const [activeTab, setActiveTab] = useState<'blocks' | 'add' | 'theme'>('blocks');
+  const currentBlocks = getCurrentBlocks();
 
   if (!site) return null;
 
@@ -28,13 +29,16 @@ export default function EditorSidebar() {
     testimonials: '💬',
     contact: '📧',
     footer: '📍',
+    blogList: '📝',
+    blogPost: '📄',
+    blogCategories: '🏷️',
   };
 
   const handleAddBlock = (blockType: BlockType) => {
     const newBlock = {
       id: crypto.randomUUID(),
       type: blockType,
-      order: site.blocks.length,
+      order: currentBlocks.length,
       data: blockTemplates[blockType],
     };
     addBlock(newBlock as any);
@@ -56,6 +60,9 @@ export default function EditorSidebar() {
     'testimonials',
     'contact',
     'footer',
+    'blogList',
+    'blogPost',
+    'blogCategories',
   ];
 
   return (
@@ -104,7 +111,7 @@ export default function EditorSidebar() {
           <div>
             <div className="mb-4">
               <h2 className="text-sm font-semibold text-gray-700 mb-2">
-                Page Blocks ({site.blocks.length})
+                Page Blocks ({currentBlocks.length})
               </h2>
               <p className="text-xs text-gray-500">
                 Click to select, drag to reorder
@@ -112,7 +119,7 @@ export default function EditorSidebar() {
             </div>
 
             <div className="space-y-2">
-              {site.blocks
+              {currentBlocks
                 .sort((a, b) => a.order - b.order)
                 .map((block, index) => (
                   <div
