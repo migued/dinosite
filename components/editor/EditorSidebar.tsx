@@ -2,13 +2,27 @@
 
 import { useEditorStore } from '@/lib/store/editorStore';
 import { useState } from 'react';
-import { FaCube, FaPalette, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaCube, FaPalette, FaPlus, FaTrash, FaFileAlt, FaBlog, FaHome } from 'react-icons/fa';
 import { BlockType } from '@/types/blocks';
 import { blockTemplates, blockDescriptions } from '@/lib/blockTemplates';
 
 export default function EditorSidebar() {
-  const { site, selectedBlockId, setSelectedBlock, updateTheme, removeBlock, addBlock, getCurrentBlocks } = useEditorStore();
-  const [activeTab, setActiveTab] = useState<'blocks' | 'add' | 'theme'>('blocks');
+  const {
+    site,
+    selectedBlockId,
+    setSelectedBlock,
+    updateTheme,
+    removeBlock,
+    addBlock,
+    getCurrentBlocks,
+    addPage,
+    removePage,
+    setCurrentPage,
+    enableBlog,
+    addBlogPost,
+    removeBlogPost,
+  } = useEditorStore();
+  const [activeTab, setActiveTab] = useState<'blocks' | 'add' | 'pages' | 'blog' | 'theme'>('blocks');
   const currentBlocks = getCurrentBlocks();
 
   if (!site) return null;
@@ -68,10 +82,10 @@ export default function EditorSidebar() {
   return (
     <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
       {/* Tabs */}
-      <div className="flex border-b border-gray-200">
+      <div className="grid grid-cols-3 border-b border-gray-200">
         <button
           onClick={() => setActiveTab('blocks')}
-          className={`flex-1 px-3 py-3 text-xs font-medium transition-colors ${
+          className={`px-2 py-3 text-xs font-medium transition-colors ${
             activeTab === 'blocks'
               ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
               : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
@@ -82,7 +96,7 @@ export default function EditorSidebar() {
         </button>
         <button
           onClick={() => setActiveTab('add')}
-          className={`flex-1 px-3 py-3 text-xs font-medium transition-colors ${
+          className={`px-2 py-3 text-xs font-medium transition-colors ${
             activeTab === 'add'
               ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
               : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
@@ -92,8 +106,30 @@ export default function EditorSidebar() {
           Add
         </button>
         <button
+          onClick={() => setActiveTab('pages')}
+          className={`px-2 py-3 text-xs font-medium transition-colors ${
+            activeTab === 'pages'
+              ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
+              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+          }`}
+        >
+          <FaFileAlt className="inline mr-1" />
+          Pages
+        </button>
+        <button
+          onClick={() => setActiveTab('blog')}
+          className={`px-2 py-3 text-xs font-medium transition-colors ${
+            activeTab === 'blog'
+              ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
+              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+          }`}
+        >
+          <FaBlog className="inline mr-1" />
+          Blog
+        </button>
+        <button
           onClick={() => setActiveTab('theme')}
-          className={`flex-1 px-3 py-3 text-xs font-medium transition-colors ${
+          className={`px-2 py-3 text-xs font-medium transition-colors ${
             activeTab === 'theme'
               ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
               : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
@@ -193,6 +229,195 @@ export default function EditorSidebar() {
                 </button>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Pages Tab */}
+        {activeTab === 'pages' && (
+          <div>
+            <div className="mb-4">
+              <h2 className="text-sm font-semibold text-gray-700 mb-2">
+                Pages ({site.pages?.length || 0})
+              </h2>
+              <p className="text-xs text-gray-500">
+                Manage your site pages
+              </p>
+            </div>
+
+            {/* Add New Page Button */}
+            <button
+              onClick={() => {
+                const title = prompt('Enter page title:');
+                if (title) {
+                  const slug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                  addPage({
+                    slug,
+                    title,
+                    blocks: [],
+                    seo: {
+                      title,
+                      description: `${title} page`,
+                    },
+                    isHome: site.pages?.length === 0,
+                  });
+                }
+              }}
+              className="w-full mb-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+            >
+              <FaPlus className="inline mr-2" />
+              New Page
+            </button>
+
+            {/* Pages List */}
+            <div className="space-y-2">
+              {site.pages && site.pages.length > 0 ? (
+                site.pages.map((page) => (
+                  <div
+                    key={page.id}
+                    onClick={() => setCurrentPage(page.id)}
+                    className={`group relative p-3 rounded-lg cursor-pointer transition-all ${
+                      site.currentPageId === page.id
+                        ? 'bg-blue-50 border-2 border-blue-500 shadow-sm'
+                        : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-gray-900 text-sm">
+                            {page.title}
+                          </p>
+                          {page.isHome && (
+                            <FaHome className="text-blue-600 text-xs" title="Home page" />
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-500">/{page.slug}</p>
+                        <p className="text-xs text-gray-400 mt-1">{page.blocks.length} blocks</p>
+                      </div>
+                      {!page.isHome && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (confirm(`Delete "${page.title}" page?`)) {
+                              removePage(page.id);
+                            }
+                          }}
+                          className="opacity-0 group-hover:opacity-100 p-1 text-red-500 hover:text-red-700 transition-opacity"
+                          title="Delete page"
+                        >
+                          <FaTrash size={12} />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-gray-500 text-sm">No pages yet</p>
+                  <p className="text-gray-400 text-xs mt-1">Create your first page</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Blog Tab */}
+        {activeTab === 'blog' && (
+          <div>
+            <div className="mb-4">
+              <h2 className="text-sm font-semibold text-gray-700 mb-2">
+                Blog Posts ({site.blog?.posts.length || 0})
+              </h2>
+              <p className="text-xs text-gray-500">
+                Manage your blog content
+              </p>
+            </div>
+
+            {!site.blog?.enabled ? (
+              <div className="text-center py-8">
+                <p className="text-gray-600 mb-4">Blog is not enabled</p>
+                <button
+                  onClick={() => enableBlog()}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+                >
+                  Enable Blog
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Add New Post Button */}
+                <button
+                  onClick={() => {
+                    const title = prompt('Enter post title:');
+                    if (title) {
+                      const slug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                      const category = prompt('Enter category:', 'General');
+                      addBlogPost({
+                        title,
+                        slug,
+                        excerpt: '',
+                        content: '',
+                        author: 'Admin',
+                        category: category || 'General',
+                        tags: [],
+                        published: false,
+                      });
+                    }
+                  }}
+                  className="w-full mb-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+                >
+                  <FaPlus className="inline mr-2" />
+                  New Post
+                </button>
+
+                {/* Posts List */}
+                <div className="space-y-2">
+                  {site.blog.posts && site.blog.posts.length > 0 ? (
+                    site.blog.posts.map((post) => (
+                      <div
+                        key={post.id}
+                        className="group relative p-3 bg-gray-50 rounded-lg border-2 border-transparent hover:border-gray-300 transition-all"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <p className="font-medium text-gray-900 text-sm">{post.title}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-xs px-2 py-0.5 bg-blue-100 text-blue-700 rounded">
+                                {post.category}
+                              </span>
+                              <span className={`text-xs px-2 py-0.5 rounded ${
+                                post.published
+                                  ? 'bg-green-100 text-green-700'
+                                  : 'bg-gray-200 text-gray-600'
+                              }`}>
+                                {post.published ? 'Published' : 'Draft'}
+                              </span>
+                            </div>
+                          </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (confirm(`Delete "${post.title}"?`)) {
+                                removeBlogPost(post.id);
+                              }
+                            }}
+                            className="opacity-0 group-hover:opacity-100 p-1 text-red-500 hover:text-red-700 transition-opacity"
+                            title="Delete post"
+                          >
+                            <FaTrash size={12} />
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8">
+                      <p className="text-gray-500 text-sm">No posts yet</p>
+                      <p className="text-gray-400 text-xs mt-1">Create your first post</p>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         )}
 
