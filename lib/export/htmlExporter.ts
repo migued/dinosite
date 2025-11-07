@@ -168,6 +168,39 @@ const getBlocksForExport = (site: Site): Block[] => {
   return site.blocks || [];
 };
 
+// Helper to generate SEO meta tags
+const generateSEOTags = (site: Site): string => {
+  const seo = site.seo || {
+    title: site.name,
+    description: `Welcome to ${site.name}`,
+  };
+
+  const ogType = seo.ogType || 'website';
+  const twitterCard = seo.twitterCard || 'summary_large_image';
+  const ogImage = seo.ogImage || '';
+  const keywords = seo.keywords?.join(', ') || '';
+
+  return `
+  <!-- Primary Meta Tags -->
+  <title>${seo.title}</title>
+  <meta name="title" content="${seo.title}">
+  <meta name="description" content="${seo.description}">
+  ${keywords ? `<meta name="keywords" content="${keywords}">` : ''}
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="${ogType}">
+  <meta property="og:title" content="${seo.title}">
+  <meta property="og:description" content="${seo.description}">
+  ${ogImage ? `<meta property="og:image" content="${ogImage}">` : ''}
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="${twitterCard}">
+  <meta property="twitter:title" content="${seo.title}">
+  <meta property="twitter:description" content="${seo.description}">
+  ${ogImage ? `<meta property="twitter:image" content="${ogImage}">` : ''}
+  `.trim();
+};
+
 export const exportToHTML = (site: Site): string => {
   const blocks = getBlocksForExport(site);
   const blocksHtml = blocks
@@ -175,13 +208,17 @@ export const exportToHTML = (site: Site): string => {
     .map(renderBlock)
     .join('\n');
 
+  const seoTags = generateSEOTags(site);
+
   return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${site.name}</title>
+
+  ${seoTags}
+
   <style>
     * {
       margin: 0;
