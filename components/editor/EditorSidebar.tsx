@@ -611,6 +611,28 @@ export default function EditorSidebar() {
                   />
                 </div>
               </div>
+
+              {/* Action Buttons */}
+              <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-xs text-blue-800 mb-3">
+                  ✓ Theme changes apply automatically as you edit
+                </p>
+                <button
+                  onClick={() => {
+                    updateTheme({
+                      primaryColor: '#3B82F6',
+                      secondaryColor: '#1E40AF',
+                      accentColor: '#60A5FA',
+                      backgroundColor: '#FFFFFF',
+                      textColor: '#1F2937',
+                    });
+                    alert('Theme reset to default colors');
+                  }}
+                  className="w-full px-4 py-2 bg-white border border-blue-300 text-blue-700 rounded-lg hover:bg-blue-50 transition-colors text-sm font-medium"
+                >
+                  Reset to Default Theme
+                </button>
+              </div>
             </div>
           </div>
         )}
