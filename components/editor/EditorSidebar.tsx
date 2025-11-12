@@ -612,6 +612,57 @@ export default function EditorSidebar() {
                 </div>
               </div>
 
+              {/* Typography Section */}
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <h3 className="text-sm font-medium text-gray-700 mb-3">Typography</h3>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Font Family
+                  </label>
+                  <select
+                    value={site.theme.fontFamily}
+                    onChange={(e) => updateTheme({ fontFamily: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                    style={{ fontFamily: site.theme.fontFamily }}
+                  >
+                    <optgroup label="System Fonts">
+                      <option value="system-ui">System Default</option>
+                      <option value="Inter">Inter (Default)</option>
+                    </optgroup>
+                    <optgroup label="Sans Serif">
+                      <option value="Roboto">Roboto</option>
+                      <option value="Open Sans">Open Sans</option>
+                      <option value="Montserrat">Montserrat</option>
+                      <option value="Poppins">Poppins</option>
+                      <option value="Raleway">Raleway</option>
+                      <option value="Lato">Lato</option>
+                      <option value="Nunito">Nunito</option>
+                      <option value="Ubuntu">Ubuntu</option>
+                    </optgroup>
+                    <optgroup label="Serif">
+                      <option value="Playfair Display">Playfair Display</option>
+                      <option value="Merriweather">Merriweather</option>
+                      <option value="Lora">Lora</option>
+                      <option value="PT Serif">PT Serif</option>
+                      <option value="Crimson Text">Crimson Text</option>
+                    </optgroup>
+                    <optgroup label="Display">
+                      <option value="Bebas Neue">Bebas Neue</option>
+                      <option value="Righteous">Righteous</option>
+                      <option value="Fugaz One">Fugaz One</option>
+                    </optgroup>
+                    <optgroup label="Monospace">
+                      <option value="Fira Code">Fira Code</option>
+                      <option value="JetBrains Mono">JetBrains Mono</option>
+                      <option value="Source Code Pro">Source Code Pro</option>
+                    </optgroup>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-2">
+                    Preview: <span style={{ fontFamily: site.theme.fontFamily }}>The quick brown fox jumps over the lazy dog</span>
+                  </p>
+                </div>
+              </div>
+
               {/* Action Buttons */}
               <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                 <p className="text-xs text-blue-800 mb-3">
@@ -625,8 +676,9 @@ export default function EditorSidebar() {
                       accentColor: '#60A5FA',
                       backgroundColor: '#FFFFFF',
                       textColor: '#1F2937',
+                      fontFamily: 'Inter',
                     });
-                    alert('Theme reset to default colors');
+                    alert('Theme reset to default');
                   }}
                   className="w-full px-4 py-2 bg-white border border-blue-300 text-blue-700 rounded-lg hover:bg-blue-50 transition-colors text-sm font-medium"
                 >

@@ -4,6 +4,8 @@ import { useEditorStore } from '@/lib/store/editorStore';
 import BlockRenderer from '@/components/blocks/BlockRenderer';
 import EditorSidebar from './EditorSidebar';
 import EditorToolbar from './EditorToolbar';
+import GoogleFontsLoader from '@/components/theme/GoogleFontsLoader';
+import TextFormatToolbar from './TextFormatToolbar';
 import {
   DndContext,
   closestCenter,
@@ -60,41 +62,59 @@ export default function Editor() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
-      <EditorSidebar />
+    <>
+      {/* Load Google Fonts dynamically */}
+      <GoogleFontsLoader fontFamily={site.theme.fontFamily} />
 
-      {/* Main Editor Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Toolbar */}
-        <EditorToolbar />
+      {/* Text formatting toolbar (appears on text selection) */}
+      {isEditing && <TextFormatToolbar />}
 
-        {/* Preview */}
-        <div className="flex-1 overflow-auto bg-gray-100 p-8">
-          <div className={`${viewportStyles[viewport]} transition-all duration-300`}>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
-            >
-              <SortableContext
-                items={currentBlocks.map((b) => b.id)}
-                strategy={verticalListSortingStrategy}
+      {/* Apply font globally to editor preview */}
+      <style jsx global>{`
+        body {
+          font-family: ${site.theme.fontFamily}, system-ui, -apple-system, sans-serif;
+        }
+      `}</style>
+
+      <div className="flex h-screen overflow-hidden">
+        {/* Sidebar */}
+        <EditorSidebar />
+
+        {/* Main Editor Area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Toolbar */}
+          <EditorToolbar />
+
+          {/* Preview */}
+          <div className="flex-1 overflow-auto bg-gray-100 p-8">
+            <div className={`${viewportStyles[viewport]} transition-all duration-300`}>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
               >
-                <div className={`bg-white ${isEditing ? 'ring-2 ring-blue-500' : ''}`}>
-                  <BlockRenderer
-                    blocks={currentBlocks}
-                    isEditing={isEditing}
-                    onUpdateBlock={updateBlock}
-                    isDraggable={isEditing}
-                    theme={site.theme}
-                  />
-                </div>
-              </SortableContext>
-            </DndContext>
+                <SortableContext
+                  items={currentBlocks.map((b) => b.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div
+                    className={`bg-white ${isEditing ? 'ring-2 ring-blue-500' : ''}`}
+                    style={{ fontFamily: site.theme.fontFamily }}
+                  >
+                    <BlockRenderer
+                      blocks={currentBlocks}
+                      isEditing={isEditing}
+                      onUpdateBlock={updateBlock}
+                      isDraggable={isEditing}
+                      theme={site.theme}
+                    />
+                  </div>
+                </SortableContext>
+              </DndContext>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
