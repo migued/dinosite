@@ -1,4 +1,5 @@
 import { BlogCategoriesBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 import { useMemo } from 'react';
 import { useEditorStore } from '@/lib/store/editorStore';
 
@@ -6,9 +7,10 @@ interface BlogCategoriesProps {
   block: BlogCategoriesBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<BlogCategoriesBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
-export default function BlogCategories({ block, isEditing, onUpdate }: BlogCategoriesProps) {
+export default function BlogCategories({ block, isEditing, onUpdate, theme }: BlogCategoriesProps) {
   const { title, displayStyle } = block.data;
   const site = useEditorStore((state) => state.site);
 
@@ -36,7 +38,11 @@ export default function BlogCategories({ block, isEditing, onUpdate }: BlogCateg
           href={`#category/${category.name}`}
           className="group p-6 bg-white rounded-lg shadow-md hover:shadow-xl transition-all hover:scale-105"
         >
-          <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+          <h3
+            className="text-xl font-bold text-gray-900 mb-2 transition-colors"
+            onMouseEnter={(e) => e.currentTarget.style.color = theme?.primaryColor || '#3B82F6'}
+            onMouseLeave={(e) => e.currentTarget.style.color = '#111827'}
+          >
             {category.name}
           </h3>
           <p className="text-gray-600">
@@ -53,7 +59,10 @@ export default function BlogCategories({ block, isEditing, onUpdate }: BlogCateg
         <a
           key={category.name}
           href={`#category/${category.name}`}
-          className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-full hover:from-blue-600 hover:to-purple-700 transition-all hover:scale-105 shadow-lg"
+          className="px-6 py-3 text-white font-semibold rounded-full transition-all hover:scale-105 hover:opacity-90 shadow-lg"
+          style={{
+            background: `linear-gradient(to right, ${theme?.primaryColor || '#3B82F6'}, ${theme?.secondaryColor || '#9333EA'})`
+          }}
         >
           {category.name} ({category.count})
         </a>
@@ -73,7 +82,11 @@ export default function BlogCategories({ block, isEditing, onUpdate }: BlogCateg
               href={`#category/${category.name}`}
               className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 transition-colors group"
             >
-              <span className="font-medium text-gray-800 group-hover:text-blue-600">
+              <span
+                className="font-medium text-gray-800 transition-colors"
+                onMouseEnter={(e) => e.currentTarget.style.color = theme?.primaryColor || '#3B82F6'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#1F2937'}
+              >
                 {category.name}
               </span>
               <span className="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm font-semibold">

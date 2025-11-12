@@ -1,22 +1,28 @@
 import { NavbarBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 import Button from '@/components/ui/Button';
 
 interface NavbarProps {
   block: NavbarBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<NavbarBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
-export default function Navbar({ block, isEditing, onUpdate }: NavbarProps) {
+export default function Navbar({ block, isEditing, onUpdate, theme }: NavbarProps) {
   const { logo, links, ctaText, ctaLink } = block.data;
 
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-50">
+    <nav
+      className="shadow-sm sticky top-0 z-50"
+      style={{ backgroundColor: theme?.backgroundColor || '#FFFFFF' }}
+    >
       <div className="max-w-7xl mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div
-            className="text-xl font-bold text-gray-900"
+            className="text-xl font-bold"
+            style={{ color: theme?.textColor || '#1F2937' }}
             contentEditable={isEditing}
             suppressContentEditableWarning
             onBlur={(e) => onUpdate?.({ logo: e.currentTarget.textContent || '' })}
@@ -30,7 +36,10 @@ export default function Navbar({ block, isEditing, onUpdate }: NavbarProps) {
               <a
                 key={index}
                 href={link.href}
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="transition-colors"
+                style={{ color: theme?.textColor || '#374151' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = theme?.primaryColor || '#3B82F6'}
+                onMouseLeave={(e) => e.currentTarget.style.color = theme?.textColor || '#374151'}
                 contentEditable={isEditing}
                 suppressContentEditableWarning
                 onBlur={(e) => {

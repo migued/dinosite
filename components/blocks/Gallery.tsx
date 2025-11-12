@@ -1,12 +1,14 @@
 import { GalleryBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 
 interface GalleryProps {
   block: GalleryBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<GalleryBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
-export default function Gallery({ block, isEditing, onUpdate }: GalleryProps) {
+export default function Gallery({ block, isEditing, onUpdate, theme }: GalleryProps) {
   const { title, subtitle, images } = block.data;
 
   return (

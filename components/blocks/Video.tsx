@@ -1,9 +1,11 @@
 import { VideoBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 
 interface VideoProps {
   block: VideoBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<VideoBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
 // Extract video ID from YouTube or Vimeo URL
@@ -25,7 +27,7 @@ const getVideoEmbedUrl = (url: string): string => {
   return url;
 };
 
-export default function Video({ block, isEditing, onUpdate }: VideoProps) {
+export default function Video({ block, isEditing, onUpdate, theme }: VideoProps) {
   const { title, subtitle, videoUrl, thumbnail } = block.data;
   const embedUrl = getVideoEmbedUrl(videoUrl);
 

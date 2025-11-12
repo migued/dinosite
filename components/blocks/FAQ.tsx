@@ -1,6 +1,7 @@
 'use client';
 
 import { FAQBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 import { useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
@@ -8,9 +9,10 @@ interface FAQProps {
   block: FAQBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<FAQBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
-export default function FAQ({ block, isEditing, onUpdate }: FAQProps) {
+export default function FAQ({ block, isEditing, onUpdate, theme }: FAQProps) {
   const { title, subtitle, items } = block.data;
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
@@ -60,7 +62,7 @@ export default function FAQ({ block, isEditing, onUpdate }: FAQProps) {
                   {item.question}
                 </h3>
                 {openIndex === index ? (
-                  <FaChevronUp className="text-blue-600 flex-shrink-0" />
+                  <FaChevronUp className="flex-shrink-0" style={{ color: theme?.primaryColor || '#3B82F6' }} />
                 ) : (
                   <FaChevronDown className="text-gray-400 flex-shrink-0" />
                 )}

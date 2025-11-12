@@ -1,4 +1,5 @@
 import { ContactBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 
@@ -6,9 +7,10 @@ interface ContactFormProps {
   block: ContactBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<ContactBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
-export default function ContactForm({ block, isEditing, onUpdate }: ContactFormProps) {
+export default function ContactForm({ block, isEditing, onUpdate, theme }: ContactFormProps) {
   const { title, subtitle, email, phone, address } = block.data;
 
   return (

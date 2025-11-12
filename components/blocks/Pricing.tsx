@@ -1,4 +1,5 @@
 import { PricingBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 import Button from '@/components/ui/Button';
 import { FaCheck } from 'react-icons/fa';
 
@@ -6,9 +7,10 @@ interface PricingProps {
   block: PricingBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<PricingBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
-export default function Pricing({ block, isEditing, onUpdate }: PricingProps) {
+export default function Pricing({ block, isEditing, onUpdate, theme }: PricingProps) {
   const { title, subtitle, tiers } = block.data;
 
   return (
@@ -39,12 +41,16 @@ export default function Pricing({ block, isEditing, onUpdate }: PricingProps) {
               key={index}
               className={`bg-white rounded-xl p-8 ${
                 tier.highlighted
-                  ? 'ring-2 ring-blue-600 shadow-2xl transform scale-105'
+                  ? 'ring-2 shadow-2xl transform scale-105'
                   : 'shadow-lg'
               }`}
+              style={tier.highlighted ? { borderColor: theme?.primaryColor || '#3B82F6' } : {}}
             >
               {tier.highlighted && (
-                <span className="bg-blue-600 text-white text-sm font-semibold px-3 py-1 rounded-full">
+                <span
+                  className="text-white text-sm font-semibold px-3 py-1 rounded-full"
+                  style={{ backgroundColor: theme?.primaryColor || '#3B82F6' }}
+                >
                   Most Popular
                 </span>
               )}

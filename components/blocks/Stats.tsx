@@ -1,16 +1,21 @@
 import { StatsBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 
 interface StatsProps {
   block: StatsBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<StatsBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
-export default function Stats({ block, isEditing, onUpdate }: StatsProps) {
+export default function Stats({ block, isEditing, onUpdate, theme }: StatsProps) {
   const { title, subtitle, stats } = block.data;
 
   return (
-    <section className="py-20 px-4 bg-blue-600 text-white">
+    <section
+      className="py-20 px-4 text-white"
+      style={{ backgroundColor: theme?.primaryColor || '#3B82F6' }}
+    >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2
@@ -22,7 +27,8 @@ export default function Stats({ block, isEditing, onUpdate }: StatsProps) {
             {title}
           </h2>
           <p
-            className="text-xl text-blue-100"
+            className="text-xl"
+            style={{ opacity: 0.9 }}
             contentEditable={isEditing}
             suppressContentEditableWarning
             onBlur={(e) => onUpdate?.({ subtitle: e.currentTarget.textContent || '' })}
@@ -50,7 +56,7 @@ export default function Stats({ block, isEditing, onUpdate }: StatsProps) {
                 {stat.value}
               </div>
               <p
-                className="text-blue-100"
+                style={{ opacity: 0.9 }}
                 contentEditable={isEditing}
                 suppressContentEditableWarning
                 onBlur={(e) => {

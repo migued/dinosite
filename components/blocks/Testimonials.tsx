@@ -1,12 +1,14 @@
 import { TestimonialsBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 
 interface TestimonialsProps {
   block: TestimonialsBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<TestimonialsBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
-export default function Testimonials({ block, isEditing, onUpdate }: TestimonialsProps) {
+export default function Testimonials({ block, isEditing, onUpdate, theme }: TestimonialsProps) {
   const { title, testimonials } = block.data;
 
   return (

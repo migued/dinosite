@@ -87,6 +87,7 @@ export default function Editor() {
                     isEditing={isEditing}
                     onUpdateBlock={updateBlock}
                     isDraggable={isEditing}
+                    theme={site.theme}
                   />
                 </div>
               </SortableContext>

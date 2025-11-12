@@ -1,12 +1,14 @@
 import { LogoGridBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 
 interface LogoGridProps {
   block: LogoGridBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<LogoGridBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
-export default function LogoGrid({ block, isEditing, onUpdate }: LogoGridProps) {
+export default function LogoGrid({ block, isEditing, onUpdate, theme }: LogoGridProps) {
   const { title, subtitle, logos } = block.data;
 
   return (

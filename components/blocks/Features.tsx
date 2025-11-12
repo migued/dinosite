@@ -1,12 +1,14 @@
 import { FeaturesBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 
 interface FeaturesProps {
   block: FeaturesBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<FeaturesBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
-export default function Features({ block, isEditing, onUpdate }: FeaturesProps) {
+export default function Features({ block, isEditing, onUpdate, theme }: FeaturesProps) {
   const { title, subtitle, features } = block.data;
 
   return (

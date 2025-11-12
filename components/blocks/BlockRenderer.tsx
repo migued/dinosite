@@ -1,4 +1,5 @@
 import { Block } from '@/types/blocks';
+import { Site } from '@/types/site';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import Hero from './Hero';
@@ -26,6 +27,7 @@ interface BlockRendererProps {
   isEditing?: boolean;
   onUpdateBlock?: (blockId: string, data: any) => void;
   isDraggable?: boolean;
+  theme: Site['theme'];
 }
 
 interface SortableBlockProps {
@@ -33,9 +35,10 @@ interface SortableBlockProps {
   isEditing?: boolean;
   isDraggable?: boolean;
   onUpdate: (data: any) => void;
+  theme: Site['theme'];
 }
 
-function SortableBlock({ block, isEditing, isDraggable, onUpdate }: SortableBlockProps) {
+function SortableBlock({ block, isEditing, isDraggable, onUpdate, theme }: SortableBlockProps) {
   const {
     attributes,
     listeners,
@@ -54,41 +57,41 @@ function SortableBlock({ block, isEditing, isDraggable, onUpdate }: SortableBloc
   const renderBlockContent = () => {
     switch (block.type) {
       case 'navbar':
-        return <Navbar block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <Navbar block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'hero':
-        return <Hero block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <Hero block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'features':
-        return <Features block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <Features block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'stats':
-        return <Stats block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <Stats block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'cta':
-        return <CTA block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <CTA block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'pricing':
-        return <Pricing block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <Pricing block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'gallery':
-        return <Gallery block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <Gallery block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'team':
-        return <Team block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <Team block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'faq':
-        return <FAQ block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <FAQ block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'video':
-        return <Video block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <Video block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'newsletter':
-        return <Newsletter block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <Newsletter block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'logoGrid':
-        return <LogoGrid block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <LogoGrid block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'testimonials':
-        return <Testimonials block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <Testimonials block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'contact':
-        return <ContactForm block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <ContactForm block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'footer':
-        return <Footer block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <Footer block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'blogList':
-        return <BlogList block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <BlogList block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'blogPost':
-        return <BlogPost block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <BlogPost block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       case 'blogCategories':
-        return <BlogCategories block={block} isEditing={isEditing} onUpdate={onUpdate} />;
+        return <BlogCategories block={block} isEditing={isEditing} onUpdate={onUpdate} theme={theme} />;
       default:
         return null;
     }
@@ -120,6 +123,7 @@ export default function BlockRenderer({
   isEditing,
   onUpdateBlock,
   isDraggable,
+  theme,
 }: BlockRendererProps) {
   const sortedBlocks = [...blocks].sort((a, b) => a.order - b.order);
 
@@ -132,6 +136,7 @@ export default function BlockRenderer({
           isEditing={isEditing}
           isDraggable={isDraggable}
           onUpdate={(data) => onUpdateBlock?.(block.id, data)}
+          theme={theme}
         />
       ))}
     </div>

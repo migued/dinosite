@@ -1,13 +1,15 @@
 import { TeamBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 import { FaLinkedin, FaTwitter, FaEnvelope } from 'react-icons/fa';
 
 interface TeamProps {
   block: TeamBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<TeamBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
-export default function Team({ block, isEditing, onUpdate }: TeamProps) {
+export default function Team({ block, isEditing, onUpdate, theme }: TeamProps) {
   const { title, subtitle, members } = block.data;
 
   return (
@@ -56,7 +58,8 @@ export default function Team({ block, isEditing, onUpdate }: TeamProps) {
                   {member.name}
                 </h3>
                 <p
-                  className="text-blue-600 font-medium mb-3"
+                  className="font-medium mb-3"
+                  style={{ color: theme?.primaryColor || '#3B82F6' }}
                   contentEditable={isEditing}
                   suppressContentEditableWarning
                   onBlur={(e) => {

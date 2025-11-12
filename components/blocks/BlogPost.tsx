@@ -1,4 +1,5 @@
 import { BlogPostBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 import { useMemo } from 'react';
 import { useEditorStore } from '@/lib/store/editorStore';
 
@@ -6,9 +7,10 @@ interface BlogPostProps {
   block: BlogPostBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<BlogPostBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
-export default function BlogPost({ block, isEditing, onUpdate }: BlogPostProps) {
+export default function BlogPost({ block, isEditing, onUpdate, theme }: BlogPostProps) {
   const site = useEditorStore((state) => state.site);
 
   // Find the blog post
@@ -45,7 +47,13 @@ export default function BlogPost({ block, isEditing, onUpdate }: BlogPostProps) 
         {/* Header */}
         <header className="mb-12">
           <div className="flex items-center gap-3 mb-6">
-            <span className="px-4 py-2 bg-blue-100 text-blue-600 font-medium rounded-full">
+            <span
+              className="px-4 py-2 font-medium rounded-full"
+              style={{
+                backgroundColor: `${theme?.primaryColor || '#3B82F6'}20`,
+                color: theme?.primaryColor || '#3B82F6'
+              }}
+            >
               {post.category}
             </span>
             <span className="text-gray-500">
@@ -63,7 +71,12 @@ export default function BlogPost({ block, isEditing, onUpdate }: BlogPostProps) 
 
           <div className="flex items-center gap-4 pb-8 border-b border-gray-200">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
+                style={{
+                  background: `linear-gradient(to bottom right, ${theme?.primaryColor || '#3B82F6'}, ${theme?.secondaryColor || '#9333EA'})`
+                }}
+              >
                 {post.author.charAt(0).toUpperCase()}
               </div>
               <div>
@@ -113,7 +126,8 @@ export default function BlogPost({ block, isEditing, onUpdate }: BlogPostProps) 
         <div className="mt-12 pt-8 border-t border-gray-200">
           <a
             href="#blog"
-            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold"
+            className="inline-flex items-center gap-2 font-semibold transition-opacity hover:opacity-80"
+            style={{ color: theme?.primaryColor || '#3B82F6' }}
           >
             ← Back to Blog
           </a>

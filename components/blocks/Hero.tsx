@@ -1,13 +1,15 @@
 import { HeroBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 import Button from '@/components/ui/Button';
 
 interface HeroProps {
   block: HeroBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<HeroBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
-export default function Hero({ block, isEditing, onUpdate }: HeroProps) {
+export default function Hero({ block, isEditing, onUpdate, theme }: HeroProps) {
   const { title, subtitle, ctaText, ctaLink, backgroundImage } = block.data;
 
   return (

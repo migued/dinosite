@@ -1,4 +1,5 @@
 import { BlogListBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 import { useMemo } from 'react';
 import { useEditorStore } from '@/lib/store/editorStore';
 
@@ -6,9 +7,10 @@ interface BlogListProps {
   block: BlogListBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<BlogListBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
-export default function BlogList({ block, isEditing, onUpdate }: BlogListProps) {
+export default function BlogList({ block, isEditing, onUpdate, theme }: BlogListProps) {
   const { title, subtitle, postsToShow, layout } = block.data;
   const site = useEditorStore((state) => state.site);
 
@@ -73,14 +75,24 @@ export default function BlogList({ block, isEditing, onUpdate }: BlogListProps) 
                 )}
                 <div className="p-6">
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="px-3 py-1 bg-blue-100 text-blue-600 text-sm font-medium rounded-full">
+                    <span
+                      className="px-3 py-1 text-sm font-medium rounded-full"
+                      style={{
+                        backgroundColor: `${theme?.primaryColor || '#3B82F6'}20`,
+                        color: theme?.primaryColor || '#3B82F6'
+                      }}
+                    >
                       {post.category}
                     </span>
                     <span className="text-gray-500 text-sm">
                       {formatDate(post.publishedAt || post.created_at)}
                     </span>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors">
+                  <h3
+                    className="text-2xl font-bold text-gray-900 mb-3 transition-colors"
+                    onMouseEnter={(e) => e.currentTarget.style.color = theme?.primaryColor || '#3B82F6'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = '#111827'}
+                  >
                     {post.title}
                   </h3>
                   <p className="text-gray-600 mb-4 line-clamp-3">
@@ -90,7 +102,8 @@ export default function BlogList({ block, isEditing, onUpdate }: BlogListProps) 
                     <span className="text-gray-700 font-medium">{post.author}</span>
                     <a
                       href={`#blog/${post.slug}`}
-                      className="text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1"
+                      className="font-semibold flex items-center gap-1 transition-opacity hover:opacity-80"
+                      style={{ color: theme?.primaryColor || '#3B82F6' }}
                     >
                       Read More →
                     </a>

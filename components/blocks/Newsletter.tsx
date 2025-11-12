@@ -1,13 +1,15 @@
 import { NewsletterBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 import { useState } from 'react';
 
 interface NewsletterProps {
   block: NewsletterBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<NewsletterBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
-export default function Newsletter({ block, isEditing, onUpdate }: NewsletterProps) {
+export default function Newsletter({ block, isEditing, onUpdate, theme }: NewsletterProps) {
   const { title, subtitle, placeholder, buttonText } = block.data;
   const [email, setEmail] = useState('');
 
@@ -20,7 +22,12 @@ export default function Newsletter({ block, isEditing, onUpdate }: NewsletterPro
   };
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-r from-purple-600 to-blue-600">
+    <section
+      className="py-20 px-4"
+      style={{
+        background: `linear-gradient(to right, ${theme?.secondaryColor || '#9333EA'}, ${theme?.primaryColor || '#3B82F6'})`
+      }}
+    >
       <div className="max-w-4xl mx-auto text-center">
         <h2
           className="text-4xl md:text-5xl font-bold text-white mb-4"
@@ -31,7 +38,8 @@ export default function Newsletter({ block, isEditing, onUpdate }: NewsletterPro
           {title}
         </h2>
         <p
-          className="text-xl text-blue-100 mb-8"
+          className="text-xl mb-8"
+          style={{ color: 'rgba(255, 255, 255, 0.9)' }}
           contentEditable={isEditing}
           suppressContentEditableWarning
           onBlur={(e) => onUpdate?.({ subtitle: e.currentTarget.textContent || '' })}
@@ -53,7 +61,8 @@ export default function Newsletter({ block, isEditing, onUpdate }: NewsletterPro
             <button
               type="submit"
               disabled={isEditing}
-              className="px-8 py-4 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-50"
+              className="px-8 py-4 bg-white font-semibold rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+              style={{ color: theme?.primaryColor || '#3B82F6' }}
             >
               <span
                 contentEditable={isEditing}
@@ -65,7 +74,7 @@ export default function Newsletter({ block, isEditing, onUpdate }: NewsletterPro
               </span>
             </button>
           </div>
-          <p className="text-blue-100 text-sm mt-4">
+          <p className="text-sm mt-4" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
             We respect your privacy. Unsubscribe at any time.
           </p>
         </form>

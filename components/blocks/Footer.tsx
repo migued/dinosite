@@ -1,10 +1,12 @@
 import { FooterBlock } from '@/types/blocks';
+import { Site } from '@/types/site';
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaGithub } from 'react-icons/fa';
 
 interface FooterProps {
   block: FooterBlock;
   isEditing?: boolean;
   onUpdate?: (data: Partial<FooterBlock['data']>) => void;
+  theme?: Site['theme'];
 }
 
 const socialIcons: Record<string, any> = {
@@ -15,7 +17,7 @@ const socialIcons: Record<string, any> = {
   github: FaGithub,
 };
 
-export default function Footer({ block, isEditing, onUpdate }: FooterProps) {
+export default function Footer({ block, isEditing, onUpdate, theme }: FooterProps) {
   const { companyName, tagline, socialLinks, copyright } = block.data;
 
   return (
