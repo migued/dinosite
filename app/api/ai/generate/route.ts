@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     const prompt = generateSitePrompt(name, description, industry);
 
     const message = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-sonnet-4-5-20250929',
       max_tokens: 4096,
       messages: [
         {
@@ -32,7 +32,15 @@ export async function POST(req: NextRequest) {
     }
 
     // Parse the JSON response from Claude
-    const generatedData = JSON.parse(content.text);
+    // Remove markdown code blocks if present (```json ... ```)
+    let jsonText = content.text.trim();
+    if (jsonText.startsWith('```json')) {
+      jsonText = jsonText.replace(/^```json\s*\n/, '').replace(/\n```$/, '');
+    } else if (jsonText.startsWith('```')) {
+      jsonText = jsonText.replace(/^```\s*\n/, '').replace(/\n```$/, '');
+    }
+
+    const generatedData = JSON.parse(jsonText);
 
     return NextResponse.json(generatedData);
   } catch (error) {
