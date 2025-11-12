@@ -1,9 +1,21 @@
 export type BlockType = 'hero' | 'features' | 'contact' | 'testimonials' | 'footer' | 'navbar' | 'stats' | 'cta' | 'pricing' | 'gallery' | 'team' | 'faq' | 'video' | 'newsletter' | 'logoGrid' | 'blogList' | 'blogPost' | 'blogCategories';
 
+export interface BlockStyle {
+  backgroundColor?: string;
+  backgroundImage?: string;
+  backgroundOverlay?: number; // 0-100 opacity
+  textColor?: string;
+  paddingTop?: string;
+  paddingBottom?: string;
+  paddingLeft?: string;
+  paddingRight?: string;
+}
+
 export interface BaseBlock {
   id: string;
   type: BlockType;
   order: number;
+  style?: BlockStyle;
 }
 
 export interface HeroBlock extends BaseBlock {

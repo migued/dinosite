@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Block } from '@/types/blocks';
+import { Block, BlockStyle } from '@/types/blocks';
 import { Site, Viewport, Page, BlogPost } from '@/types/site';
 
 interface HistoryState {
@@ -26,6 +26,7 @@ interface EditorState {
 
   // Block actions (works with current page or legacy blocks)
   updateBlock: (blockId: string, data: any) => void;
+  updateBlockStyle: (blockId: string, style: BlockStyle) => void;
   addBlock: (block: Block) => void;
   removeBlock: (blockId: string) => void;
   reorderBlocks: (blocks: Block[]) => void;
@@ -143,6 +144,21 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       const updatedBlocks = currentBlocks.map((block) =>
         block.id === blockId
           ? { ...block, data: { ...block.data, ...data } }
+          : block
+      );
+
+      const newSite = updateCurrentBlocks(state.site, updatedBlocks);
+      return saveToHistory(state, newSite);
+    }),
+
+  updateBlockStyle: (blockId, style) =>
+    set((state) => {
+      if (!state.site) return state;
+
+      const currentBlocks = getCurrentBlocks(state.site);
+      const updatedBlocks = currentBlocks.map((block) =>
+        block.id === blockId
+          ? { ...block, style: { ...block.style, ...style } }
           : block
       );
 

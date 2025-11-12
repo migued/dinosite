@@ -6,6 +6,7 @@ import EditorSidebar from './EditorSidebar';
 import EditorToolbar from './EditorToolbar';
 import GoogleFontsLoader from '@/components/theme/GoogleFontsLoader';
 import TextFormatToolbar from './TextFormatToolbar';
+import BlockPropertiesPanel from './BlockPropertiesPanel';
 import {
   DndContext,
   closestCenter,
@@ -23,8 +24,19 @@ import {
 } from '@dnd-kit/sortable';
 
 export default function Editor() {
-  const { site, isEditing, updateBlock, viewport, reorderBlocks, getCurrentBlocks } = useEditorStore();
+  const {
+    site,
+    isEditing,
+    updateBlock,
+    updateBlockStyle,
+    viewport,
+    reorderBlocks,
+    getCurrentBlocks,
+    selectedBlockId,
+    setSelectedBlock,
+  } = useEditorStore();
   const currentBlocks = getCurrentBlocks();
+  const selectedBlock = currentBlocks.find(b => b.id === selectedBlockId);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -107,6 +119,8 @@ export default function Editor() {
                       onUpdateBlock={updateBlock}
                       isDraggable={isEditing}
                       theme={site.theme}
+                      selectedBlockId={selectedBlockId}
+                      onSelectBlock={setSelectedBlock}
                     />
                   </div>
                 </SortableContext>
@@ -114,6 +128,15 @@ export default function Editor() {
             </div>
           </div>
         </div>
+
+        {/* Block Properties Panel */}
+        {isEditing && selectedBlock && (
+          <BlockPropertiesPanel
+            block={selectedBlock}
+            onUpdate={updateBlockStyle}
+            onClose={() => setSelectedBlock(null)}
+          />
+        )}
       </div>
     </>
   );

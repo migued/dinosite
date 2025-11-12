@@ -28,6 +28,8 @@ interface BlockRendererProps {
   onUpdateBlock?: (blockId: string, data: any) => void;
   isDraggable?: boolean;
   theme: Site['theme'];
+  selectedBlockId?: string | null;
+  onSelectBlock?: (blockId: string) => void;
 }
 
 interface SortableBlockProps {
@@ -36,9 +38,11 @@ interface SortableBlockProps {
   isDraggable?: boolean;
   onUpdate: (data: any) => void;
   theme: Site['theme'];
+  onSelectBlock?: (blockId: string) => void;
+  isSelected?: boolean;
 }
 
-function SortableBlock({ block, isEditing, isDraggable, onUpdate, theme }: SortableBlockProps) {
+function SortableBlock({ block, isEditing, isDraggable, onUpdate, theme, onSelectBlock, isSelected }: SortableBlockProps) {
   const {
     attributes,
     listeners,
@@ -48,11 +52,24 @@ function SortableBlock({ block, isEditing, isDraggable, onUpdate, theme }: Sorta
     isDragging,
   } = useSortable({ id: block.id });
 
-  const style = {
+  const blockStyle = block.style || {};
+
+  const containerStyle: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    backgroundColor: blockStyle.backgroundColor,
+    color: blockStyle.textColor,
+    paddingTop: blockStyle.paddingTop,
+    paddingBottom: blockStyle.paddingBottom,
+    paddingLeft: blockStyle.paddingLeft,
+    paddingRight: blockStyle.paddingRight,
+    position: 'relative',
   };
+
+  // Background image with overlay
+  const hasBackgroundImage = blockStyle.backgroundImage;
+  const overlayOpacity = blockStyle.backgroundOverlay || 0;
 
   const renderBlockContent = () => {
     switch (block.type) {
@@ -100,9 +117,38 @@ function SortableBlock({ block, isEditing, isDraggable, onUpdate, theme }: Sorta
   return (
     <div
       ref={setNodeRef}
-      style={style}
-      className={`relative group ${isDraggable ? 'hover:outline hover:outline-2 hover:outline-blue-400' : ''}`}
+      style={containerStyle}
+      className={`relative group ${isDraggable ? 'hover:outline hover:outline-2 hover:outline-blue-400' : ''} ${
+        isSelected ? 'outline outline-2 outline-blue-600 ring-4 ring-blue-200' : ''
+      }`}
+      onClick={(e) => {
+        if (isEditing && onSelectBlock && e.target === e.currentTarget) {
+          onSelectBlock(block.id);
+        }
+      }}
     >
+      {/* Background image layer */}
+      {hasBackgroundImage && (
+        <>
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${blockStyle.backgroundImage})`,
+              zIndex: -2,
+            }}
+          />
+          {overlayOpacity > 0 && (
+            <div
+              className="absolute inset-0 bg-black"
+              style={{
+                opacity: overlayOpacity / 100,
+                zIndex: -1,
+              }}
+            />
+          )}
+        </>
+      )}
+
       {isDraggable && (
         <div
           {...attributes}
@@ -113,7 +159,24 @@ function SortableBlock({ block, isEditing, isDraggable, onUpdate, theme }: Sorta
           <FaGripVertical className="text-gray-600" />
         </div>
       )}
-      {renderBlockContent()}
+
+      {/* Properties button */}
+      {isEditing && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelectBlock?.(block.id);
+          }}
+          className="absolute right-2 top-2 z-10 bg-blue-600 text-white rounded shadow-lg px-3 py-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity hover:bg-blue-700"
+          title="Edit properties"
+        >
+          Propiedades
+        </button>
+      )}
+
+      <div className="relative z-0">
+        {renderBlockContent()}
+      </div>
     </div>
   );
 }
@@ -124,6 +187,8 @@ export default function BlockRenderer({
   onUpdateBlock,
   isDraggable,
   theme,
+  selectedBlockId,
+  onSelectBlock,
 }: BlockRendererProps) {
   const sortedBlocks = [...blocks].sort((a, b) => a.order - b.order);
 
@@ -137,6 +202,8 @@ export default function BlockRenderer({
           isDraggable={isDraggable}
           onUpdate={(data) => onUpdateBlock?.(block.id, data)}
           theme={theme}
+          onSelectBlock={onSelectBlock}
+          isSelected={selectedBlockId === block.id}
         />
       ))}
     </div>
