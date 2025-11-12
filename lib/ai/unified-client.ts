@@ -26,24 +26,37 @@ interface AIResponse {
   text: string;
 }
 
+interface AIConfigOverride {
+  provider?: string;
+  model?: string;
+}
+
 /**
  * Generate completion using the configured AI provider
+ * @param messages - Array of messages to send to the AI
+ * @param override - Optional config to override environment variables
  */
-export async function generateCompletion(messages: AIMessage[]): Promise<AIResponse> {
+export async function generateCompletion(
+  messages: AIMessage[],
+  override?: AIConfigOverride
+): Promise<AIResponse> {
+  // Allow frontend to override provider and model
+  const provider = override?.provider || AI_PROVIDER;
+  const model = override?.model || AI_MODEL;
   // OpenRouter / OpenAI-compatible endpoint
-  if (AI_PROVIDER === 'openrouter' || AI_PROVIDER === 'openai' || AI_PROVIDER === 'custom') {
+  if (provider === 'openrouter' || provider === 'openai' || provider === 'custom') {
     const response = await fetch(`${AI_BASE_URL}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${AI_API_KEY}`,
-        ...(AI_PROVIDER === 'openrouter' && {
+        ...(provider === 'openrouter' && {
           'HTTP-Referer': process.env.SITE_URL || 'http://localhost:3000',
           'X-Title': 'DinoSite AI Builder',
         }),
       },
       body: JSON.stringify({
-        model: AI_MODEL,
+        model: model,
         messages: messages,
         temperature: 0.7,
         max_tokens: 4096,
@@ -60,14 +73,14 @@ export async function generateCompletion(messages: AIMessage[]): Promise<AIRespo
   }
 
   // Anthropic Claude direct API
-  if (AI_PROVIDER === 'anthropic') {
+  if (provider === 'anthropic') {
     const Anthropic = require('@anthropic-ai/sdk');
     const client = new Anthropic.Anthropic({
       apiKey: AI_API_KEY,
     });
 
     const message = await client.messages.create({
-      model: AI_MODEL || 'claude-sonnet-4-5-20250929',
+      model: model || 'claude-sonnet-4-5-20250929',
       max_tokens: 4096,
       messages: messages,
     });
@@ -80,7 +93,7 @@ export async function generateCompletion(messages: AIMessage[]): Promise<AIRespo
     return { text: content.text };
   }
 
-  throw new Error(`Unsupported AI provider: ${AI_PROVIDER}`);
+  throw new Error(`Unsupported AI provider: ${provider}`);
 }
 
 /**
