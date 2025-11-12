@@ -29,7 +29,7 @@ export default function BlogCategories({ block, isEditing, onUpdate }: BlogCateg
   }, [site?.blog?.posts]);
 
   const renderGrid = () => (
-    <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {categoriesWithCounts.map((category) => (
         <a
           key={category.name}

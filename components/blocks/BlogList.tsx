@@ -56,7 +56,7 @@ export default function BlogList({ block, isEditing, onUpdate }: BlogListProps) 
             <p className="text-gray-500 text-lg">No blog posts yet. Create your first post!</p>
           </div>
         ) : (
-          <div className={layout === 'grid' ? 'grid md:grid-cols-2 lg:grid-cols-3 gap-8' : 'space-y-8 max-w-4xl mx-auto'}>
+          <div className={layout === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8' : 'space-y-8 max-w-4xl mx-auto'}>
             {posts.map((post) => (
               <article
                 key={post.id}

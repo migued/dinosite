@@ -33,7 +33,7 @@ export default function ContactForm({ block, isEditing, onUpdate }: ContactFormP
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           <div className="space-y-4">
             <div>
               <h3 className="font-semibold text-gray-900 mb-2">Email</h3>

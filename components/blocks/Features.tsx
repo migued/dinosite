@@ -31,7 +31,7 @@ export default function Features({ block, isEditing, onUpdate }: FeaturesProps) 
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <div key={index} className="text-center">
               <div className="text-5xl mb-4">{feature.icon}</div>
